@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Cooking Street">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Cooking Street">
 <style>html,body{margin:0;padding:0;height:100%;overflow:hidden;-webkit-text-size-adjust:100%}</style>
 <title>Cooking Street</title>
 <style>
@@ -56,9 +56,9 @@
   --body:"Nunito","Trebuchet MS",system-ui,sans-serif;
   color-scheme: light;
 }
-html,body{height:100%}
+html,body{height:100%;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 body{background:var(--page);color:var(--ink);font-family:var(--body);overflow:hidden}
-#wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;
+#wrap{position:fixed;inset:0;touch-action:none;display:flex;align-items:center;justify-content:center;overflow:hidden;
   background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.55) 0 8%,transparent 9%) 0 0/90px 90px,linear-gradient(#ffc6dd,#ffe4c9)}
 #turn{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));left:16px;right:16px;text-align:center;font:600 18px var(--display);
   background:#fff;border-radius:16px;padding:8px 12px;z-index:5;box-shadow:0 4px 12px rgba(122,63,85,.25)}
@@ -388,6 +388,7 @@ svg{display:block}
       <div id="steps" aria-hidden="true"></div>
       <div class="spacer"></div>
       <div id="coins" aria-label="Coins"><span id="coinIcon"></span><span id="coinNum">0</span></div>
+      <button class="hbtn" id="fitBtn" aria-label="Fit the game to the screen" title="Fit to screen"><svg viewBox="0 0 40 40"><g fill="none" stroke="#e0508e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14 V6 H14"/><path d="M26 6 H34 V14"/><path d="M34 26 V34 H26"/><path d="M14 34 H6 V26"/></g><rect x="13" y="13" width="14" height="14" rx="3" fill="url(#gLidPink)"/></svg></button>
       <button class="hbtn" id="muteBtn" aria-label="Sound on or off"></button>
     </div>
     <div id="cap"><div class="dotav" id="dotav"></div><div class="bubble" id="capText" role="status">Tap the Bakery to start!</div></div>
@@ -410,7 +411,18 @@ function fit(){
   scale=Math.min(w/W,h/H)*0.98;stage.style.transform='scale('+scale+')';
   document.getElementById('turn').hidden=!(h>w*1.1);
 }
-addEventListener('resize',fit);fit();
+addEventListener('resize',fit);addEventListener('orientationchange',()=>setTimeout(unstick,350));
+if(window.visualViewport)visualViewport.addEventListener('resize',fit);
+/* stop Safari pinch / double-tap zoom from getting the game stuck */
+['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault(),{passive:false}));
+document.addEventListener('touchmove',e=>{if(e.touches&&e.touches.length>1)e.preventDefault();},{passive:false});
+document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
+function unstick(){
+  const m=document.querySelector('meta[name=viewport]');
+  if(m){const c='width=device-width,initial-scale=1,viewport-fit=cover';m.setAttribute('content',c.replace('initial-scale=1','initial-scale=1.0')+',maximum-scale=1.0,user-scalable=0');setTimeout(()=>m.setAttribute('content',c+',maximum-scale=1,user-scalable=no'),60);}
+  window.scrollTo(0,0);fit();setTimeout(fit,300);
+}
+fit();
 function toStage(e){const r=stage.getBoundingClientRect();const s=r.width/W;return{x:(e.clientX-r.left)/s,y:(e.clientY-r.top)/s};}
 
 /* ---------- save: one profile per kid, kept in the artifact's database with a copy on this device ---------- */
@@ -556,6 +568,7 @@ function speak(t){
 }
 function say(t){capText.textContent=t;wobble(capText);speak(t);}
 capText.addEventListener('click',()=>speak(capText.textContent));
+document.getElementById('fitBtn').addEventListener('click',()=>{unstick();wobble(document.getElementById('fitBtn'));});
 const muteBtn=document.getElementById('muteBtn');
 function drawMute(){
   muteBtn.innerHTML='<svg viewBox="0 0 40 40"><path d="M6 15 H13 L22 7 V33 L13 25 H6Z" fill="url(#gCoin)" stroke="#c07800" stroke-width="2.5" stroke-linejoin="round"/>'+
