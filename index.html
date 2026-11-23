@@ -285,8 +285,14 @@ svg{display:block}
 .pchip .av{width:52px;height:52px}.pchip .sw2{font-size:16px;color:#fff;background:#ff8fbf;border-radius:999px;padding:3px 10px}
 .mstars{display:flex;gap:2px}.mstars svg{width:28px;height:28px}
 .menucard .pic{height:160px !important;width:160px !important}
+#cap.dyk .bubble{background:linear-gradient(#fffbe0,#fff1b8);border-color:#ffd54a;font-size:24px}
+.pagearrow{z-index:20;border:5px solid #fff;border-radius:24px;background:linear-gradient(#ff9ec7,#ff5f9e);color:#fff;font:700 64px/70px var(--display);box-shadow:0 6px 0 #d9417f;cursor:pointer;padding:0}
+.pagearrow:disabled{opacity:.3}
+.pagedots{display:flex;justify-content:center;gap:12px;z-index:6}.pagedots i{width:16px;height:16px;border-radius:50%;background:#f3c6d8}.pagedots i.on{background:#ff5f9e}
+
 </style>
 </head><body>
+
 
 <div id="wrap">
   <div id="turn" hidden>Turn your screen sideways for a bigger kitchen</div>
@@ -381,7 +387,6 @@ svg{display:block}
     <div id="fx"></div>
   </div>
 </div>
-
 
 <script>
 (function(){
@@ -718,6 +723,53 @@ Object.assign(ING,{
   ice:{name:'ice',svg:iceSVG,w:80,h:64,col:'#e6f6ff',kind:'ice'}
 });
 
+/* ---------- v6: new cake ingredients ---------- */
+const lemonSVG=`<svg viewBox="0 0 100 80" width="100%" height="100%"><path d="M8 40 Q4 30 14 28 C22 8 66 6 80 24 Q94 24 92 36 Q96 46 86 50 C74 72 30 74 18 54 Q4 52 8 40Z" fill="#ffe14d" stroke="${INK}" stroke-width="2.5"/><path d="M24 30 Q40 18 62 22" stroke="#fff" stroke-width="5" fill="none" opacity=".7" stroke-linecap="round"/><path d="M78 22 Q86 8 98 10 Q90 22 78 22Z" fill="url(#gLeaf)" stroke="${INK}" stroke-width="2"/><g fill="#f2c200">${[[30,46],[50,52],[66,42],[44,36]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="1.6"/>`).join('')}</g></svg>`;
+const carrotSVG=`<svg viewBox="0 0 120 70" width="100%" height="100%"><path d="M30 18 Q14 8 6 14 Q14 22 30 26 Q16 32 10 44 Q24 42 34 32Z" fill="url(#gLeaf)" stroke="${INK}" stroke-width="2"/><path d="M30 14 Q36 10 44 14 L114 46 Q118 50 112 52 L40 50 Q26 46 26 32 Q26 18 30 14Z" fill="#ff8a1f" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/><path d="M52 22 L56 30 M72 30 L74 40 M90 38 L92 46 M44 40 L50 44" stroke="#c85a00" stroke-width="2.5" stroke-linecap="round"/><path d="M36 22 Q60 22 100 42" stroke="#fff" stroke-width="4" opacity=".55" fill="none" stroke-linecap="round"/></svg>`;
+Object.assign(ING,{
+  lemon:{name:'lemon',svg:lemonSVG,w:78,h:62,col:'#fff06a',kind:'drops'},
+  carrot:{name:'carrot',svg:carrotSVG,w:96,h:56,col:'#ff8a1f',kind:'drops'}
+});
+
+/* ---------- v6: "Did you know?" facts (why each ingredient goes in) ---------- */
+const FACTS={
+  flour:'Flour builds the body of your bake. Add water and it makes a stretchy net called gluten.',
+  sugar:'Sugar makes it sweet, and it helps the top turn golden brown in the oven.',
+  butter:'Butter makes cakes soft and rich. Beating it traps tiny air bubbles inside.',
+  milk:'Milk adds moisture, so your bake is soft and not dry.',
+  eggs:'Eggs are like glue. They hold everything together and help it puff up.',
+  vanilla:'Vanilla comes from the seed pod of an orchid flower! It adds a sweet smell.',
+  cocoa:'Cocoa powder is made from roasted cacao beans. That is what makes it chocolatey.',
+  yeast:'Yeast is alive! It eats sugar and burps out gas bubbles that make dough rise.',
+  salt:'A pinch of salt makes the flavour stronger and stops the yeast going too fast.',
+  cinnamon:'Cinnamon is the bark of a tree, dried until it curls up into sticks!',
+  water:'Water wakes up the yeast and turns dry flour into dough.',
+  honey:'Bees make honey from flower nectar. It makes cake sweet and extra moist.',
+  oil:'Oil keeps a cake soft and moist for days.',
+  lemon:'The yellow skin of a lemon is called zest. It is full of oils that taste zingy.',
+  carrot:'Grated carrot keeps the cake moist and adds natural sweetness.',
+  strawberry:'Strawberries have about as much vitamin C as oranges. That helps keep you healthy.',
+  banana:'Bananas make smoothies thick and creamy, and sweet without extra sugar.',
+  mango:'Mangoes are full of vitamin A, which helps your eyes see in the dark.',
+  blueberry:'Blueberries turn smoothies purple! Their colour comes from natural plant colours.',
+  ojuice:'Orange juice makes the smoothie zingy and gives you vitamin C.',
+  yogurt:'Yogurt is milk made thick by friendly bacteria. It makes smoothies creamy.',
+  ice:'Ice keeps the smoothie cold and makes it frosty and thick.',
+  kiwi:'A kiwi has tiny black seeds you can eat, and lots of vitamin C.'
+};
+const FACTS_FOR={
+  pizza:{flour:'Pizza flour has lots of gluten. Kneading makes the dough stretchy so it will not tear.',
+    oil:'Olive oil makes pizza dough soft inside and helps the crust go crispy.',
+    sugar:'Yeast likes a little sugar to eat.'},
+  bread:{flour:'Bread flour has lots of gluten. Kneading makes it stretchy so it traps the gas bubbles.'},
+  buns:{milk:'Milk makes the bun dough soft and helps the tops go golden.'},
+  smoothie:{milk:'Milk makes the smoothie runny enough to sip through a straw.'},
+  berrycake:{strawberry:'Mashed strawberries make the sponge pink and fruity.'},
+  carrot:{oil:'Carrot cake uses oil instead of butter, which keeps it soft and moist for days.'}
+};
+function factFor(k){const R=run.R;const o=FACTS_FOR[run.key]||{},s=FACTS_FOR[R.shop]||{};return o[k]||s[k]||FACTS[k]||'';}
+function sayFact(pre,k){const f=factFor(k);if(!f){say(pre);return;}capEl.classList.add('dyk');say(pre+' Did you know? '+f);}
+
 /* smoothie toppers */
 Object.assign(TOPPERS,{
   mint:`<svg viewBox="0 0 70 70"><path d="M35 62 C10 52 6 24 26 10 C38 28 40 46 35 62Z" fill="url(#gLeaf)" stroke="${INK}" stroke-width="2"/><path d="M35 62 C58 54 64 28 46 14 C34 30 32 46 35 62Z" fill="url(#gBasil)" stroke="${INK}" stroke-width="2"/><path d="M35 60 Q26 38 26 14 M35 60 Q44 40 46 16" stroke="#e8ffd8" stroke-width="2" fill="none" opacity=".8"/></svg>`,
@@ -725,6 +777,12 @@ Object.assign(TOPPERS,{
   umbrella:`<svg viewBox="0 0 70 70"><path d="M35 30 L35 66" stroke="url(#gWood)" stroke-width="4" stroke-linecap="round"/><path d="M6 32 Q35 -6 64 32 Q57 26 50 32 Q42 26 35 32 Q28 26 20 32 Q13 26 6 32Z" fill="url(#gBerry)" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/><path d="M20 32 Q26 8 35 6 Q30 20 35 32 Q40 20 35 6 Q44 8 50 32" fill="#ffe680" opacity=".85"/><circle cx="35" cy="6" r="3" fill="url(#gStar)"/></svg>`
 });
 Object.assign(TOPPER_NAMES,{mint:'a mint leaf',banana:'a banana slice',umbrella:'a little umbrella'});
+Object.assign(TOPPERS,{
+  lemon:`<svg viewBox="0 0 70 70"><circle cx="35" cy="35" r="27" fill="#ffe14d" stroke="${INK}" stroke-width="2.5"/><circle cx="35" cy="35" r="21" fill="#fff6a8"/>${[0,45,90,135,180,225,270,315].map(a=>{const r=a*Math.PI/180;return `<path d="M35 35 L${35+Math.cos(r)*19} ${35+Math.sin(r)*19}" stroke="#ffe14d" stroke-width="3"/>`}).join('')}<circle cx="35" cy="35" r="3" fill="#ffe14d"/><ellipse cx="25" cy="22" rx="6" ry="3" fill="#fff" opacity=".8" transform="rotate(-30 25 22)"/></svg>`,
+  carrot:`<svg viewBox="0 0 70 70"><path d="M30 16 Q22 4 16 8 Q22 14 30 18 Q24 6 32 2 Q34 10 34 18Z" fill="url(#gLeaf)" stroke="${INK}" stroke-width="2"/><path d="M26 18 Q36 12 44 20 L38 64 Q35 68 32 64Z" fill="#ff8a1f" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/><path d="M30 28 L36 30 M32 40 L38 42 M33 52 L37 53" stroke="#c85a00" stroke-width="2.5" stroke-linecap="round"/></svg>`,
+  bee:`<svg viewBox="0 0 70 70"><ellipse cx="24" cy="22" rx="11" ry="14" fill="#e6f6ff" stroke="${INK}" stroke-width="2" transform="rotate(-30 24 22)"/><ellipse cx="44" cy="22" rx="11" ry="14" fill="#e6f6ff" stroke="${INK}" stroke-width="2" transform="rotate(30 44 22)"/><ellipse cx="35" cy="42" rx="22" ry="16" fill="#ffc21a" stroke="${INK}" stroke-width="2.5"/><path d="M28 28 Q24 42 28 56 M40 27 Q36 42 40 57" stroke="#2b1838" stroke-width="6" fill="none"/><circle cx="52" cy="38" r="3" fill="#2b1838"/></svg>`
+});
+Object.assign(TOPPER_NAMES,{lemon:'a lemon slice',carrot:'a little carrot',bee:'a honey bee'});
 const CREAMS=[['#fffdf7','whipped cream'],['#ffc2d6','strawberry cream'],['#ffe7a3','vanilla cream'],['#d9c2ff','blueberry cream']];
 
 /* pizza toppings */
@@ -784,7 +842,20 @@ const RECIPES={
     bake:[[0,'#f1dcb0'],[.42,'#e8b66c'],[.54,'#d99a4c'],[.66,'#c27c34'],[.84,'#7a4220'],[1,'#3a2014']],
     decor:'bread',frosts:WASHES,sprinkles:['sesame','poppy','oats'],toppers:[],extra:'sprinkle',noun:'loaf of bread'}
 };
-const RKEYS=['cupcakes','cake','buns','bread'];
+const CAKEBAKE=(a,b,c,d)=>[[0,a],[.42,b],[.54,c],[.66,d],[.84,'#7a4220'],[1,'#3a2014']];
+const ck=o=>Object.assign({shape:'pour',decor:'cake',sprinkles:['rainbow','choc','hearts'],extra:'topper',noun:'cake',shop:'bakery'},o);
+Object.assign(RECIPES,{
+  lemon:ck({name:'Lemon drizzle cake',price:50,ings:['flour','sugar','butter','eggs','lemon','milk'],eggs:2,temp:180,batter:'#f7e07a',sponge:'#f2cf5e',
+    bake:CAKEBAKE('#f9e8a0','#f2cb62','#ebb550','#d8973c'),frosts:[['#fff59a','lemon icing'],['#fffaf0','white icing'],['#ffb3cf','pink icing']],toppers:['lemon','berry','flower','candle'],demo:['#fff59a','lemon']}),
+  berrycake:ck({name:'Strawberry cake',price:60,ings:['flour','sugar','butter','eggs','strawberry','vanilla'],eggs:3,temp:180,batter:'#ffb7c8',sponge:'#f7a3b6',
+    bake:CAKEBAKE('#ffc9d4','#f5ab9a','#eb9a80','#d8805e'),frosts:[['#fffdf7','whipped cream'],['#ff9ec7','pink'],['#fff3d6','vanilla']],toppers:['berry','cherry','flower','candle'],demo:['#fffdf7','berry'],noun:'strawberry cake'}),
+  carrot:ck({name:'Carrot cake',price:80,ings:['flour','sugar','oil','eggs','carrot','cinnamon'],eggs:3,temp:170,batter:'#d99a55',sponge:'#c98446',
+    bake:CAKEBAKE('#e2b07a','#cf9356','#c08044','#a86a34'),frosts:[['#fff8e8','cream cheese'],['#fff3d6','vanilla'],['#ffe7a3','honey']],toppers:['carrot','star','flower','candle'],demo:['#fff8e8','carrot']}),
+  honeycake:ck({name:'Honey cake',price:90,ings:['flour','honey','butter','eggs','milk','cinnamon'],eggs:2,temp:160,batter:'#e8b65e',sponge:'#d9a04a',
+    bake:CAKEBAKE('#f0cf8a','#e3b064','#d69a4e','#c0823a'),frosts:[['#ffe7a3','honey'],['#fff3d6','vanilla'],['#8b5a3c','chocolate']],toppers:['bee','flower','star','candle'],demo:['#ffe7a3','bee']})
+});
+RECIPES.cake.sponge='#76472b';
+const RKEYS=['cupcakes','cake','buns','bread','lemon','berrycake','carrot','honeycake'];
 Object.values(RECIPES).forEach(R=>R.shop='bakery');
 const PIZZA_STEPS=['order','gather','mix','shape','stretch','sauce','toppings','bake','slice','serve'];
 const DRINK_STEPS=['order','gather','chop','blend','pour','decorate','serve'];
@@ -800,9 +871,9 @@ Object.assign(RECIPES,{
   berryblast:sm({name:'Berry blast',price:50,ings:['blueberry','strawberry','banana','yogurt','ice'],batter:'#a35fc4',noun:'berry blast smoothie',demo:['#d9c2ff','mint']})
 });
 const SHOPS={
-  bakery:{name:'Bakery',keys:['cupcakes','cake','buns','bread'],pool:['flour','sugar','butter','milk','eggs','vanilla','cocoa','yeast','salt','cinnamon','water','honey','cheese','ketchup','onion','fish'],cust:'bunny',board:'What shall we bake?',price:0},
-  pizza:{name:'Pizzeria',keys:['margherita','veggie','pepperoni'],pool:['flour','yeast','water','salt','oil','sugar','cocoa','milk','honey','cinnamon','vanilla','ketchup','onion','fish','eggs','butter'],cust:'puppy',board:'Which pizza shall we make?',price:60},
-  smoothie:{name:'Smoothie Hut',keys:['strawban','mangosun','berryblast'],pool:['strawberry','banana','mango','blueberry','kiwi','ojuice','yogurt','milk','ice','honey','onion','fish','salt','ketchup','cheese','cocoa'],cust:'kitten',board:'Which smoothie shall we blend?',price:30}
+  bakery:{name:'Bakery',keys:['cupcakes','cake','buns','bread','lemon','berrycake','carrot','honeycake'],pool:['flour','sugar','butter','milk','eggs','vanilla','cocoa','yeast','salt','cinnamon','water','honey','cheese','ketchup','onion','fish','lemon','carrot','strawberry','oil','banana','kiwi','mango','yogurt'],cust:'bunny',board:'What shall we bake?',price:0},
+  pizza:{name:'Pizzeria',keys:['margherita','veggie','pepperoni'],pool:['flour','yeast','water','salt','oil','sugar','cocoa','milk','honey','cinnamon','vanilla','ketchup','onion','fish','eggs','butter','lemon','carrot','banana','cheese','strawberry','yogurt'],cust:'puppy',board:'Which pizza shall we make?',price:60},
+  smoothie:{name:'Smoothie Hut',keys:['strawban','mangosun','berryblast'],pool:['strawberry','banana','mango','blueberry','kiwi','ojuice','yogurt','milk','ice','honey','onion','fish','salt','ketchup','cheese','cocoa','lemon','carrot','flour','eggs','vanilla','oil'],cust:'kitten',board:'Which smoothie shall we blend?',price:30}
 };
 let curShop='bakery';
 const shopOpen=k=>k==='bakery'||save.unlocked.includes('shop:'+k);
@@ -816,7 +887,7 @@ function newRun(key){
   run={key,R,C:CUST[SHOPS[R.shop].cust],steps,added:[],mixed:false,levels:[0,0,0,0,0,0],frost:null,pipe:false,sprinkles:[],toppers:[],cake:null,pizza:null,
     order,score:{mistakes:0,splashes:0,shape:1,bake:0,temp:0,stretch:1,sauce:1,tops:0,topsExact:false,slice:1,chop:1,chopMiss:0,order:0,nolid:0,blend:0,pour:1},bakeColor:R.bake[Math.min(3,R.bake.length-1)][1]};
 }
-function orderText(){const o=run.order,R=run.R;if(R.shop==='pizza'){const ks=Object.keys(o.tops).map(k=>o.tops[k]+' '+topWord(k,o.tops[k]));return ks.join(' and ');}return o.frostName+(R.decor==='bread'||R.decor==='bun'||R.decor==='smoothie'?'':' frosting')+' and '+(R.extra==='topper'?TOPPER_NAMES[o.extra]:SPR[o.extra].name);}
+function orderText(){const o=run.order,R=run.R;if(R.shop==='pizza'){const ks=Object.keys(o.tops).map(k=>o.tops[k]+' '+topWord(k,o.tops[k]));return ks.join(' and ');}return o.frostName+(R.decor==='bread'||R.decor==='bun'||R.decor==='smoothie'||/icing|cream/.test(o.frostName)?'':' frosting')+' and '+(R.extra==='topper'?TOPPER_NAMES[o.extra]:SPR[o.extra].name);}
 
 /* product pictures (menu, order bubble, order card) */
 const FROST_SMALL='M14 74 Q8 48 34 44 Q38 20 60 24 Q82 20 86 44 Q112 48 106 74 Q60 84 14 74Z';
@@ -827,9 +898,11 @@ function productSVG(key,fr,ex){
   const top=ex&&R.extra==='topper'?`<svg x="40" y="-8" width="40" height="40" viewBox="0 0 70 70">${inner(TOPPERS[ex])}</svg>`:'';
   if(key==='cupcakes'){
     s=`<path d="M22 70 L33 122 L87 122 L98 70Z" fill="url(#gStripeA)"/><path d="M36 72 L42 122 M50 72 L53 122 M64 72 L63 122 M78 72 L74 122 M90 72 L84 122" stroke="#ffc4dd" stroke-width="5"/><path d="M22 70 L33 122 L87 122 L98 70Z" fill="url(#gCyl)" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/><path d="${FROST_SMALL}" fill="${fr||'#fff0f6'}" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/>${SH(FROST_SMALL)}${top}`;
-  }else if(key==='cake'){
+  }else if(R.decor==='cake'){
+    if(fr===undefined&&R.demo){fr=R.demo[0];if(ex===undefined){ex=R.demo[1];}}
+    const top=ex?`<svg x="40" y="12" width="40" height="40" viewBox="0 0 70 70">${inner(TOPPERS[ex])}</svg>`:'';
     const fd='M14 62 A46 14 0 0 1 106 62 L106 72 Q100 86 94 72 Q86 92 78 74 Q66 82 58 76 Q50 94 42 76 Q32 84 26 74 Q20 88 14 72Z';
-    s=`<ellipse cx="60" cy="118" rx="56" ry="10" fill="url(#gWhite)" stroke="${INK}" stroke-width="2"/><path d="M14 62 V106 A46 14 0 0 0 106 106 V62Z" fill="#76472b"/><path d="M14 62 V106 A46 14 0 0 0 106 106 V62Z" fill="url(#gCyl)" stroke="${INK}" stroke-width="2.5"/><path d="M14 86 A46 14 0 0 0 106 86" stroke="#fff3d6" stroke-width="5" fill="none"/><path d="${fd}" fill="${fr||'#8b5a3c'}" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/>${SH(fd)}${top.replace('y="-8"','y="12"')}`;
+    s=`<ellipse cx="60" cy="118" rx="56" ry="10" fill="url(#gWhite)" stroke="${INK}" stroke-width="2"/><path d="M14 62 V106 A46 14 0 0 0 106 106 V62Z" fill="${R.sponge||'#76472b'}"/><path d="M14 62 V106 A46 14 0 0 0 106 106 V62Z" fill="url(#gCyl)" stroke="${INK}" stroke-width="2.5"/><path d="M14 86 A46 14 0 0 0 106 86" stroke="#fff3d6" stroke-width="5" fill="none"/><path d="${fd}" fill="${fr||'#8b5a3c'}" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/>${SH(fd)}${top}`;
   }else if(key==='buns'){
     s=`<ellipse cx="60" cy="112" rx="56" ry="12" fill="url(#gWhite)" stroke="${INK}" stroke-width="2"/><circle cx="60" cy="70" r="44" fill="#e5a85a" stroke="${INK}" stroke-width="2.5"/><path d="M60 70 m0 -4 a4 4 0 1 1 -4 4 a9 9 0 1 1 9 9 a15 15 0 1 1 -15 -15 a22 22 0 1 1 22 22 a30 30 0 1 1 -30 -30" fill="none" stroke="#9a5a26" stroke-width="5" opacity=".75"/>${SH('M16 70 a44 44 0 1 0 88 0 a44 44 0 1 0 -88 0')}${fr?`<path d="M26 56 L44 82 L56 50 L70 86 L82 52 L94 78" fill="none" stroke="${fr}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>`:''}${ex?sprDots(ex,60,70,34,30,22):''}`;
   }else{
@@ -969,7 +1042,7 @@ ${Array.from({length:11},(_,i)=>`<rect x="${i*120+20}" y="660" width="64" height
 </svg>`;
 
 /* =================================================================== PLUMBING */
-function goto(fn){
+function goto(fn){capEl.classList.remove('dyk');
   clearAll();hintFn=null;clearTimeout(hintTimer);hideHand();
   if(run&&run.cake&&run.cake.parentNode)run.cake.remove();
   scene.innerHTML='';fx.innerHTML='';capEl.classList.remove('low');
@@ -1047,14 +1120,22 @@ function sceneStreet(){
   const nm=player.name;say(!save.bakes?'Hi '+nm+', I am Dot! Tap the Bakery to start cooking.':anyLocked?'Welcome back, '+nm+'! Earn coins to open more shops.':'Welcome back, '+nm+'! Where shall we cook today?');
   setHint(()=>({x:235,y:440}));
 }
+let menuPage={};
 function sceneMenu(){
   run=null;setStep('menu');kitchen();capEl.classList.add('low');
-  const SH0=SHOPS[curShop],keys=SH0.keys,n0=keys.length,x0=(1280-(n0*295-25))/2;
+  const SH0=SHOPS[curShop],allKeys=SH0.keys,pages=Math.ceil(allKeys.length/4);let pg=Math.min(menuPage[curShop]|0,pages-1);
+  const keys=allKeys.slice(pg*4,pg*4+4),n0=keys.length,PW=pages>1?280:295,CW=PW-25,x0=(1280-(n0*PW-25))/2;
+  if(pages>1){
+    const arrow=(dir,x)=>{const b=el('button','abs pagearrow',dir<0?'&#8249;':'&#8250;');place(b,x,330,70,90);b.setAttribute('aria-label',dir<0?'Previous recipes':'More recipes');
+      const to=pg+dir;if(to<0||to>=pages){b.disabled=true;return;}b.addEventListener('click',()=>{sfx.pop();menuPage[curShop]=to;goto(sceneMenu);});};
+    arrow(-1,14);arrow(1,1196);
+    const dots=el('div','abs pagedots',Array.from({length:pages},(_,i)=>`<i class="${i===pg?'on':''}"></i>`).join(''));place(dots,0,560,1280);
+  }
   el('div','abs board',SH0.board);
   keys.forEach((k,i)=>{
     const R=RECIPES[k],open=save.unlocked.includes(k)||R.price===0;
     const n=el('div','abs menu',`<div class="menucard${open?'':' locked'}"><div class="pic">${productSVG(k)}</div><h3>${R.name}</h3>${open?`<div class="mstars">${[0,1,2].map(i=>STAR(i<(save.best[k]|0))).join('')}</div><div class="price" style="color:#1f9a6c">Play</div>`:`<div class="price">${coinSVG}${R.price}</div><div class="lock">${LOCK}</div>`}</div>`);
-    place(n,x0+i*295,200,270,330);n.setAttribute('role','button');n.setAttribute('aria-label',open?'Make '+R.name:R.name+', unlock for '+R.price+' coins');
+    place(n,x0+i*PW,200,CW,330);n.setAttribute('role','button');n.setAttribute('aria-label',open?'Make '+R.name:R.name+', unlock for '+R.price+' coins');
     n.addEventListener('click',()=>{
       if(open){sfx.pop();newRun(k);goto(sceneOrder);return;}
       if(save.coins>=R.price){
@@ -1089,7 +1170,9 @@ function sceneGather(){
   <path d="M4 26 Q-30 240 4 456" fill="none" stroke="#ffb3c9" stroke-width="10"/><rect x="250" y="-2" width="120" height="14" rx="7" fill="url(#gCoin)"/></svg>`).style.cssText+='left:10px;top:186px';
   const card=recipeCard(850,150,{temp:false});card.classList.add('big');
   const bowl=makeBowl(780,400);
-  const all=shuffle(SHOPS[run.R.shop].pool.slice());
+  const need0=run.R.ings,extras=shuffle(SHOPS[run.R.shop].pool.filter(k=>!need0.includes(k)));
+  const nItems=Math.min(18,need0.length+extras.length,13+Math.floor(Math.random()*6));
+  const all=shuffle(need0.concat(extras.slice(0,nItems-need0.length)));
   const slots=[];shelves.forEach(sy=>{for(let i=0;i<6;i++)slots.push({x:68+i*94,y:sy});});
   const pick=shuffle(slots.slice()).slice(0,all.length);
   const need=run.R.ings;let done=0;
@@ -1109,8 +1192,9 @@ function sceneGather(){
       card.querySelector(`[data-k="${k}"]`).classList.add('got');
       later(()=>{drawBlob(bowl,k,run.added.length-1);sfx.plop();n.remove();},300);
       done++;
-      if(done===need.length){hintFn=null;later(()=>{sfx.cheer();say(run.score.mistakes?'Everything is in!':'Everything is in, with no mistakes!');},500);later(()=>goto(run.R.eggs?sceneEggs:run.R.shop==='smoothie'?sceneChop:sceneMix),1800);}
-      else say(['Yes!','Right!','Super!','Great!','Nice!'][done%5]+' What else is on the card?');
+      if(done===need.length){hintFn=null;sayFact(run.score.mistakes?'Everything is in!':'Everything is in, with no mistakes!',k);later(()=>sfx.cheer(),400);
+        const go=bigButton('Next',990,600,'',()=>{capEl.classList.remove('dyk');goto(run.R.eggs?sceneEggs:run.R.shop==='smoothie'?sceneChop:sceneMix);});go.style.opacity=0;later(()=>{go.style.transition='opacity .3s';go.style.opacity=1;},900);setHint(()=>({x:1060,y:640}));}
+      else sayFact(['Yes!','Right!','Super!','Great!','Nice!'][done%5],k);
     }});
   });
   say('Find everything on the recipe card in the cupboard. Drag it into the bowl!');
