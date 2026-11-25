@@ -298,6 +298,18 @@ svg{display:block}
 .dtool{z-index:45;filter:drop-shadow(0 8px 6px rgba(80,30,50,.3));transition:transform .08s}.dtool.press{transform:scale(.94,1)}
 .cake canvas{pointer-events:none}
 .topper.ghost{pointer-events:none;filter:drop-shadow(0 14px 8px rgba(0,0,0,.3));opacity:.95}
+
+.fryitem{z-index:10;cursor:grab;touch-action:none;filter:drop-shadow(0 6px 4px rgba(40,10,20,.35));transition:left .25s,top .25s,width .3s,height .3s}
+.fryitem svg{display:block}
+.fgauge{z-index:40;border-radius:9px;border:3px solid #fff;background:linear-gradient(90deg,#f6e3bd 0 55%,#ffd23a 55% 78%,#6b3a1e 78%);box-shadow:0 3px 6px rgba(0,0,0,.25);pointer-events:none}
+.fgauge b{position:absolute;top:-9px;width:0;height:0;margin-left:-8px;border:8px solid transparent;border-top:12px solid #e0508e}
+.steam{width:34px;height:34px;border-radius:50%;background:radial-gradient(#ffffffcc,#ffffff00 70%);animation:steamup 1.2s ease-out forwards;pointer-events:none}
+.oilbub{width:14px;height:14px;border-radius:50%;border:2px solid #fff6c8;background:#ffe9907a;animation:bubpop 1.2s ease-out forwards;pointer-events:none}
+@keyframes steamup{from{transform:translateY(0) scale(.6);opacity:.9}to{transform:translateY(-120px) scale(1.6);opacity:0}}
+@keyframes bubpop{0%{transform:scale(.3);opacity:0}30%{opacity:1}100%{transform:scale(1.4);opacity:0}}
+.btile{width:134px;height:84px;padding:4px 4px 2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}.btile span{font:700 15px var(--display);color:#b0607f;line-height:1}.tool.btile svg{height:46px}
+.bghost{pointer-events:none;filter:drop-shadow(0 12px 8px rgba(0,0,0,.3))}
+.burgerstack .blayer{transition:top .2s}
 </style>
 </head><body>
 
@@ -365,6 +377,7 @@ svg{display:block}
         <linearGradient id="gPantryIn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7d9c8"/><stop offset="1" stop-color="#fff1e6"/></linearGradient>
 <radialGradient id="gFurTan" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#fffaf2"/><stop offset=".55" stop-color="#f5dcb8"/><stop offset="1" stop-color="#d9a86c"/></radialGradient>
 <radialGradient id="gEarTan" cx=".4" cy=".3" r=".9"><stop offset="0" stop-color="#c98a52"/><stop offset="1" stop-color="#8a5226"/></radialGradient>
+<radialGradient id="gFurBear" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#e8c6a0"/><stop offset=".55" stop-color="#b9824f"/><stop offset="1" stop-color="#8a5a32"/></radialGradient>
 <radialGradient id="gFurGinger" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#fffaf0"/><stop offset=".55" stop-color="#ffd6a6"/><stop offset="1" stop-color="#f0a050"/></radialGradient>
 <linearGradient id="gMango" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#8bc34a"/><stop offset=".35" stop-color="#ffd23f"/><stop offset=".7" stop-color="#ff9a2e"/><stop offset="1" stop-color="#f0473c"/></linearGradient>
 <linearGradient id="gBanana" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff59a"/><stop offset=".55" stop-color="#ffd93b"/><stop offset="1" stop-color="#e8b923"/></linearGradient>
@@ -830,13 +843,13 @@ const CUST={bunny:{name:'Bun',full:'Bun the bunny'},puppy:{name:'Pepper',full:'P
 const CN=()=>run&&run.C?run.C.name:'Bun';
 function custSVG(kind){
   if(!kind||kind==='bunny')return bunnySVG();
-  const pup=kind==='puppy',fur=pup?'url(#gFurTan)':'url(#gFurGinger)';
+  const pup=kind==='puppy',bear=kind==='bear',fur=pup?'url(#gFurTan)':bear?'url(#gFurBear)':'url(#gFurGinger)';
   const eye=(x)=>`<ellipse cx="${x}" cy="134" rx="13" ry="16" fill="#2b1838"/><ellipse cx="${x}" cy="138" rx="10" ry="11" fill="url(#gIris)"/><circle cx="${x-4}" cy="128" r="5.5" fill="#fff"/><circle cx="${x+5}" cy="141" r="2.4" fill="#fff"/>`;
-  const earsBack=pup?'':`<g class="ears"><path d="M48 116 L54 50 L98 90Z" fill="${fur}" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><path d="M57 104 L60 66 L86 90Z" fill="url(#gEarIn)"/><path d="M152 116 L146 50 L102 90Z" fill="${fur}" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><path d="M143 104 L140 66 L114 90Z" fill="url(#gEarIn)"/></g>`;
+  const earsBack=pup?'':bear?`<g class="ears"><circle cx="52" cy="92" r="24" fill="${fur}" stroke="${INK}" stroke-width="3"/><circle cx="52" cy="92" r="12" fill="#e8b48a"/><circle cx="148" cy="92" r="24" fill="${fur}" stroke="${INK}" stroke-width="3"/><circle cx="148" cy="92" r="12" fill="#e8b48a"/></g>`:`<g class="ears"><path d="M48 116 L54 50 L98 90Z" fill="${fur}" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><path d="M57 104 L60 66 L86 90Z" fill="url(#gEarIn)"/><path d="M152 116 L146 50 L102 90Z" fill="${fur}" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><path d="M143 104 L140 66 L114 90Z" fill="url(#gEarIn)"/></g>`;
   const earsFront=pup?`<g class="ears"><path d="M50 92 C18 92 12 150 24 178 C32 194 52 190 56 170 C60 140 64 106 50 92Z" fill="url(#gEarTan)" stroke="${INK}" stroke-width="3"/><path d="M150 92 C182 92 188 150 176 178 C168 194 148 190 144 170 C140 140 136 106 150 92Z" fill="url(#gEarTan)" stroke="${INK}" stroke-width="3"/></g>`:'';
-  const face=pup?`<ellipse cx="124" cy="130" rx="22" ry="20" fill="#d9a066" opacity=".6"/>`:`<path d="M90 84 L94 102 M100 80 V100 M110 84 L106 102" stroke="#e8893a" stroke-width="5" stroke-linecap="round"/>`;
-  const nose=pup?`<ellipse cx="100" cy="153" rx="12" ry="8.5" fill="#2b1838"/><ellipse cx="96" cy="150" rx="4" ry="2" fill="#fff" opacity=".7"/>`:`<path d="M93 150 L107 150 L100 158Z" fill="#ff6fa6" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/><path d="M44 150 L72 154 M42 162 L72 160 M156 150 L128 154 M158 162 L128 160" stroke="${INK}" stroke-width="2" stroke-linecap="round"/>`;
-  const collar=pup?`<path d="M58 196 Q100 214 142 196 L144 208 Q100 228 56 208Z" fill="#ff4d5e" stroke="${INK}" stroke-width="2.5"/><circle cx="100" cy="220" r="9" fill="url(#gCoin)" stroke="#c07800" stroke-width="2"/>`:`<path d="M70 200 L100 214 L130 200 L126 222 L100 214 L74 222Z" fill="#3fc0d9" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/><circle cx="100" cy="214" r="7" fill="#3fc0d9" stroke="${INK}" stroke-width="2.5"/>`;
+  const face=bear?`<ellipse cx="100" cy="160" rx="30" ry="22" fill="#f3d6b4"/>`:pup?`<ellipse cx="124" cy="130" rx="22" ry="20" fill="#d9a066" opacity=".6"/>`:`<path d="M90 84 L94 102 M100 80 V100 M110 84 L106 102" stroke="#e8893a" stroke-width="5" stroke-linecap="round"/>`;
+  const nose=pup||bear?`<ellipse cx="100" cy="153" rx="12" ry="8.5" fill="#2b1838"/><ellipse cx="96" cy="150" rx="4" ry="2" fill="#fff" opacity=".7"/>`:`<path d="M93 150 L107 150 L100 158Z" fill="#ff6fa6" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/><path d="M44 150 L72 154 M42 162 L72 160 M156 150 L128 154 M158 162 L128 160" stroke="${INK}" stroke-width="2" stroke-linecap="round"/>`;
+  const collar=bear?`<path d="M74 198 L100 210 L74 222Z M126 198 L100 210 L126 222Z" fill="#ff8a1f" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/><circle cx="100" cy="210" r="6" fill="#ffb347" stroke="${INK}" stroke-width="2.5"/>`:pup?`<path d="M58 196 Q100 214 142 196 L144 208 Q100 228 56 208Z" fill="#ff4d5e" stroke="${INK}" stroke-width="2.5"/><circle cx="100" cy="220" r="9" fill="url(#gCoin)" stroke="#c07800" stroke-width="2"/>`:`<path d="M70 200 L100 214 L130 200 L126 222 L100 214 L74 222Z" fill="#3fc0d9" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/><circle cx="100" cy="214" r="7" fill="#3fc0d9" stroke="${INK}" stroke-width="2.5"/>`;
   return `<svg viewBox="0 0 200 300" width="100%" height="100%" overflow="visible">${earsBack}
 <path d="M40 298 Q36 190 100 186 Q164 190 160 298 Z" fill="${fur}" stroke="${INK}" stroke-width="3"/>
 <path d="M64 298 L68 212 Q100 228 132 212 L136 298 Z" fill="url(#gApron)" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/>
@@ -902,18 +915,20 @@ const shopOpen=k=>k==='bakery'||save.unlocked.includes('shop:'+k);
 let run=null;
 function newRun(key){
   const R=RECIPES[key];let order;
-  if(R.shop==='pizza'){const kinds=[R.tops[0],...shuffle(R.tops.slice(1)).slice(0,R.nTops-1)];const tops={};kinds.forEach(k=>tops[k]=3+Math.floor(Math.random()*4));order={tops};}
+  if(R.shop==='burger'){const mid=shuffle(R.fill.slice()),sauce=Math.random()<.5?'ketchup':'mayo';mid.splice(1+Math.floor(Math.random()*mid.length),0,sauce);order={layers:['bunB',...mid,'bunT'],sauce};}
+  else if(R.shop==='pizza'){const kinds=[R.tops[0],...shuffle(R.tops.slice(1)).slice(0,R.nTops-1)];const tops={};kinds.forEach(k=>tops[k]=3+Math.floor(Math.random()*4));order={tops};}
   else{const f=R.frosts[Math.floor(Math.random()*R.frosts.length)];const pool=R.extra==='topper'?R.toppers:R.sprinkles;const ex=pool[Math.floor(Math.random()*pool.length)];order={frost:f[0],frostName:f[1],extra:ex};}
   let steps=R.steps;if(!steps){steps=['order','gather'];if(R.eggs)steps.push('eggs');steps.push('mix','shape','bake','decorate','serve');}
   run={key,R,C:CUST[SHOPS[R.shop].cust],steps,added:[],mixed:false,levels:[0,0,0,0,0,0],frost:null,pipe:false,sprinkles:[],toppers:[],cake:null,pizza:null,
     order,score:{mistakes:0,splashes:0,shape:1,bake:0,temp:0,stretch:1,sauce:1,tops:0,topsExact:false,slice:1,chop:1,chopMiss:0,order:0,nolid:0,blend:0,pour:1},bakeColor:R.bake[Math.min(3,R.bake.length-1)][1]};
 }
-function orderText(){const o=run.order,R=run.R;if(R.shop==='pizza'){const ks=Object.keys(o.tops).map(k=>o.tops[k]+' '+topWord(k,o.tops[k]));return ks.join(' and ');}return o.frostName+(R.decor==='bread'||R.decor==='bun'||R.decor==='smoothie'||/icing|cream/.test(o.frostName)?'':' frosting')+' and '+(R.extra==='topper'?TOPPER_NAMES[o.extra]:SPR[o.extra].name);}
+function orderText(){const o=run.order,R=run.R;if(R.shop==='burger')return o.layers.slice(1,-1).map(k=>BL[k].name).join(', then ');if(R.shop==='pizza'){const ks=Object.keys(o.tops).map(k=>o.tops[k]+' '+topWord(k,o.tops[k]));return ks.join(' and ');}return o.frostName+(R.decor==='bread'||R.decor==='bun'||R.decor==='smoothie'||/icing|cream/.test(o.frostName)?'':' frosting')+' and '+(R.extra==='topper'?TOPPER_NAMES[o.extra]:SPR[o.extra].name);}
 
 /* product pictures (menu, order bubble, order card) */
 const FROST_SMALL='M14 74 Q8 48 34 44 Q38 20 60 24 Q82 20 86 44 Q112 48 106 74 Q60 84 14 74Z';
 function productSVG(key,fr,ex){
   const R=RECIPES[key];let s='';
+  if(R.shop==='burger')return `<svg viewBox="0 -12 120 138" width="100%" height="100%">${burgerPic(Array.isArray(fr)?fr:R.demo,run&&run.key===key?{bunB:layerCol('bunB'),bunT:layerCol('bunT'),kabab:layerCol('kabab'),strips:layerCol('strips')}:null)}</svg>`;
   if(R.shop==='pizza')return `<svg viewBox="0 -2 120 128" width="100%" height="100%">${pizzaPic(fr||R.demo)}</svg>`;
   if(R.shop==='smoothie')return `<svg viewBox="0 -18 120 144" width="100%" height="100%">${drinkPic(R.batter,fr===undefined?R.demo[0]:fr,ex===undefined?R.demo[1]:ex)}</svg>`;
   const top=ex&&R.extra==='topper'?`<svg x="40" y="-8" width="40" height="40" viewBox="0 0 70 70">${inner(TOPPERS[ex])}</svg>`:'';
@@ -1120,13 +1135,14 @@ function sceneStreet(){
   el('div','abs title','Cooking Street');
   const chip=el('button','abs pchip',`<span class="av">${headSVG(player.animal,player.color)}</span><span class="nm"></span><span class="sw2">Switch</span>`);chip.querySelector('.nm').textContent=player.name;place(chip,24,16);chip.setAttribute('aria-label','Switch chef');chip.addEventListener('click',()=>{sfx.pop();goto(scenePlayers);});
   const shops=[
-    {key:'bakery',name:'Bakery',wall:'#ffd6e6',a1:'#ff6aa8',a2:'#fff',text:'#d9417f',icon:inner(productSVG('cupcakes','#fff0f6','cherry')),x:70},
-    {key:'pizza',name:'Pizzeria',wall:'#ffe2c4',a1:'#ff4d5e',a2:'#fff',text:'#d93d3d',icon:pizzaInner,x:475},
-    {key:'smoothie',name:'Smoothie Hut',wall:'#dcf6cf',a1:'#ffcf3a',a2:'#3fd39b',text:'#1f9a6c',icon:glassInner,x:880}
+    {key:'bakery',name:'Bakery',wall:'#ffd6e6',a1:'#ff6aa8',a2:'#fff',text:'#d9417f',icon:inner(productSVG('cupcakes','#fff0f6','cherry')),x:22},
+    {key:'pizza',name:'Pizzeria',wall:'#ffe2c4',a1:'#ff4d5e',a2:'#fff',text:'#d93d3d',icon:pizzaInner,x:332},
+    {key:'smoothie',name:'Smoothie Hut',wall:'#dcf6cf',a1:'#ffcf3a',a2:'#3fd39b',text:'#1f9a6c',icon:glassInner,x:642},
+    {key:'burger',name:'Burger Hut',wall:'#fff0c4',a1:'#ff8a1f',a2:'#ffe14d',text:'#c85a00',icon:burgerInner,x:952}
   ];
   shops.forEach(s=>{
     s.locked=!shopOpen(s.key);s.price=SHOPS[s.key].price;
-    s.id=uid();const n=el('div','abs shop',shopSVG(s));place(n,s.x,236,330,360);
+    s.id=uid();const n=el('div','abs shop',shopSVG(s));place(n,s.x,262,306,334);
     n.setAttribute('role','button');n.setAttribute('aria-label',s.locked?s.name+', open for '+s.price+' coins':'Open the '+s.name);
     n.addEventListener('click',()=>{
       if(s.locked){
@@ -1139,7 +1155,7 @@ function sceneStreet(){
   });
   const anyLocked=shops.some(s=>s.locked);
   const nm=player.name;say(!save.bakes?'Hi '+nm+', I am Dot! Tap the Bakery to start cooking.':anyLocked?'Welcome back, '+nm+'! Earn coins to open more shops.':'Welcome back, '+nm+'! Where shall we cook today?');
-  setHint(()=>({x:235,y:440}));
+  setHint(()=>({x:175,y:450}));
 }
 let menuPage={};
 function sceneMenu(){
@@ -1174,7 +1190,7 @@ function sceneOrder(){
   setStep('order');kitchen();
   const o=run.order;
   const bun=el('div','abs bunny hop',custSVG(SHOPS[run.R.shop].cust));place(bun,1320,160,250,375);
-  const bub=el('div','abs speech',productSVG(run.key,run.R.shop==='pizza'?o.tops:o.frost,o.extra));place(bub,560,150,240,240);bub.style.opacity=0;bub.style.transition='opacity .4s';
+  const bub=el('div','abs speech',productSVG(run.key,run.R.shop==='pizza'?o.tops:run.R.shop==='burger'?o.layers:o.frost,o.extra));place(bub,560,150,240,240);bub.style.opacity=0;bub.style.transition='opacity .4s';
   say('Here comes '+run.C.full+'!');
   nextFrame(()=>{bun.style.left='860px';});
   later(()=>{bun.classList.remove('hop');bub.style.opacity=1;sfx.sparkle();say(CN()+' wants a '+run.R.noun+' with '+orderText()+'!');},1300);
@@ -1214,7 +1230,7 @@ function sceneGather(){
       later(()=>{drawBlob(bowl,k,run.added.length-1);sfx.plop();n.remove();},300);
       done++;
       if(done===need.length){hintFn=null;sayFact(run.score.mistakes?'Everything is in!':'Everything is in, with no mistakes!',k);later(()=>sfx.cheer(),400);
-        const go=bigButton('Next',990,600,'',()=>{capEl.classList.remove('dyk');goto(run.R.eggs?sceneEggs:run.R.shop==='smoothie'?sceneChop:sceneMix);});go.style.opacity=0;later(()=>{go.style.transition='opacity .3s';go.style.opacity=1;},900);setHint(()=>({x:1060,y:640}));}
+        const go=bigButton('Next',990,600,'',()=>{capEl.classList.remove('dyk');if(run.R.shop==='burger'){burgerGo();return;}goto(run.R.eggs?sceneEggs:run.R.shop==='smoothie'?sceneChop:sceneMix);});go.style.opacity=0;later(()=>{go.style.transition='opacity .3s';go.style.opacity=1;},900);setHint(()=>({x:1060,y:640}));}
       else sayFact(['Yes!','Right!','Super!','Great!','Nice!'][done%5],k);
     }});
   });
@@ -2112,9 +2128,10 @@ function fruitChopSVG(k,id){
   return `<svg viewBox="0 0 320 160" width="480" height="240" overflow="visible"><defs>${defs}</defs>${segs}${lines}</svg>`;
 }
 const knifeSVG=`<svg viewBox="0 0 70 220" width="100%" height="100%"><rect x="24" y="4" width="22" height="80" rx="9" fill="url(#gLidPink)" stroke="${INK}" stroke-width="2.5"/><circle cx="35" cy="26" r="3" fill="#fff"/><circle cx="35" cy="58" r="3" fill="#fff"/><path d="M22 84 L48 84 L48 196 Q48 214 30 216 L22 216Z" fill="url(#gSteel)" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/><path d="M28 92 L28 206" stroke="#fff" stroke-width="3" opacity=".7"/></svg>`;
-function sceneChop(){
-  setStep('chop');kitchen();
-  const fruits=run.added.filter(k=>ING[k]&&ING[k].kind==='fruit');
+function sceneChop(o){
+  o=o||{items:run.added.filter(k=>ING[k]&&ING[k].kind==='fruit'),step:'chop',done:'All chopped! Time to blend.',next:()=>goto(sceneBlend)};
+  setStep(o.step);kitchen();
+  const fruits=o.items;
   const B={x:200,y:330,w:640,h:310};
   el('div','abs chopboard').style.cssText+=`left:${B.x}px;top:${B.y}px;width:${B.w}px;height:${B.h}px`;
   const FX=280,FY=365,SC=1.5;
@@ -2126,7 +2143,7 @@ function sceneChop(){
     fi++;if(cur)cur.remove();
     if(fi>=fruits.length){
       hintFn=null;const acc=run.chopAcc.length?run.chopAcc.reduce((a,b)=>a+b,0)/run.chopAcc.length:1;
-      run.score.chop=Math.max(0,acc-.08*run.score.chopMiss);sfx.cheer();say('All chopped! Time to blend.');later(()=>goto(sceneBlend),1500);return;
+      run.score.chop=Math.max(0,acc-.08*run.score.chopMiss);(run.cutQ=run.cutQ||[]).push(run.score.chop);run.score.chopMiss=0;sfx.cheer();say(o.done);later(o.next,1500);return;
     }
     const k=fruits[fi],F=FRUIT[k];cutDone=[];peeled=!F.peel;busy=false;
     cur=el('div','abs',fruitChopSVG(k,uid()));place(cur,FX,FY,480,240);cur.style.zIndex=5;
@@ -2138,7 +2155,7 @@ function sceneChop(){
     busy=true;sfx.sparkle();
     cur.style.transition='transform .6s ease-in,opacity .6s';cur.style.transformOrigin='50% 50%';
     cur.style.transform=`translate(${bowl.cx-(FX+240)}px,${bowl.y+60-(FY+120)}px) scale(.25)`;cur.style.opacity=0;
-    later(()=>{for(let i=0;i<3;i++){bowl.blobs.appendChild(svgEl('ellipse',{cx:120+((blobs*47)%150),cy:84+(blobs%3)*7,rx:20,ry:11,fill:ING[k].col,stroke:INK,'stroke-width':1.5}));blobs++;}sfx.plop();},550);
+    later(()=>{for(let i=0;i<3;i++){bowl.blobs.appendChild(svgEl('ellipse',{cx:120+((blobs*47)%150),cy:84+(blobs%3)*7,rx:20,ry:11,fill:(ING[FRUIT[k].ing||k]||{}).col||FRUIT[k].flesh,stroke:INK,'stroke-width':1.5}));blobs++;}sfx.plop();},550);
     later(next,900);
   }
   function knifeAt(x){place(knife,Math.max(B.x-20,Math.min(B.x+B.w-40,x-12)),140);}
@@ -2330,6 +2347,14 @@ function scoreParts(){
     [Math.round(S.temp*1.2),12,'Tip: set the oven to the temperature on the recipe card.'],
     [S.bake,15,'Tip: take it out when the arrow is in the gold zone.'],
     [Math.round(10*S.slice),10,'Tip: cut straight through the middle, evenly spaced.']],matched:!!S.topsExact};
+  if(R.shop==='burger'){const F=S.fry||{},cq=run.cutQ&&run.cutQ.length?run.cutQ.reduce((a,b)=>a+b,0)/run.cutQ.length:1,main=F.kabab!=null?F.kabab:F.strips!=null?F.strips:1;
+    return{parts:[
+    [Math.max(3,12-4*S.mistakes),12,'Tip: only use what is on the recipe card.'],
+    [Math.round(10*(F.buns==null?1:F.buns)),10,'Tip: take the buns off when the arrow is in the gold zone.'],
+    [Math.round(20*main),20,'Tip: flip it when the arrow reaches gold, and cook both sides.'],
+    [Math.round(18*cq),18,'Tip: cut right on the dotted lines.'],
+    [Math.round(20*(S.layersSet==null?0:S.layersSet)),20,'Tip: use every filling '+N+' asked for.'],
+    [S.layersExact?20:0,20,'Next time, stack it in the order '+N+' asked for!']],matched:!!S.layersExact};}
   const frostOK=run.frost===o.frost,extraOK=R.extra==='topper'?run.toppers.includes(o.extra):run.sprinkles.includes(o.extra);
   const order=[(frostOK?13:0)+(extraOK?12:0),25,'Next time, match '+N+'’s order exactly!'];
   if(R.shop==='smoothie')return{parts:[
@@ -2349,6 +2374,222 @@ function scoreParts(){
     [S.bake,15,'Tip: take it out when the arrow is in the gold zone.'],
     order],matched:frostOK&&extraOK};
 }
+
+/* =================================================================== BURGER HUT (v9, from Bilal's notes) */
+const BUN_CRUST='#e39a45';
+const FRY_STOPS={
+  buns:[[0,'#f6e3bd'],[.4,'#efc27a'],[.6,'#e0a250'],[.78,'#c9823a'],[1,'#3d2318']],
+  kabab:[[0,'#cf6b5e'],[.4,'#a4553a'],[.6,'#86492a'],[.78,'#6a381e'],[1,'#2a160c']],
+  strips:[[0,'#f3dcae'],[.4,'#eec274'],[.6,'#dea045'],[.78,'#c27a2a'],[1,'#4a2810']]
+};
+const BL={
+  bunB:{name:'bottom bun',h:52,s:12,drop:0,svg:c=>`<path d="M16 16 Q16 50 60 50 L240 50 Q284 50 284 16Z" fill="${BUN_CRUST}" stroke="${INK}" stroke-width="3"/><path d="M30 30 Q40 44 70 46" stroke="#fff" stroke-width="5" opacity=".45" fill="none" stroke-linecap="round"/><ellipse cx="150" cy="16" rx="134" ry="12" fill="${c||'#efc27a'}" stroke="${INK}" stroke-width="3"/>`},
+  bunT:{name:'top bun',h:104,s:0,drop:9,svg:c=>`<ellipse cx="150" cy="92" rx="134" ry="11" fill="${c||'#efc27a'}" stroke="${INK}" stroke-width="3"/><path d="M16 90 Q16 6 150 4 Q284 6 284 90 Q150 104 16 90Z" fill="${BUN_CRUST}" stroke="${INK}" stroke-width="3"/><path d="M16 90 Q16 6 150 4 Q284 6 284 90 Q150 104 16 90Z" fill="url(#gShade)" opacity=".6"/><ellipse cx="96" cy="30" rx="46" ry="12" fill="#fff" opacity=".45" transform="rotate(-12 96 30)"/>${[[70,46,-30],[110,26,10],[150,42,-10],[190,24,30],[230,48,15],[130,64,40],[180,62,-25],[90,72,5],[215,74,-40],[60,70,60],[245,66,20],[160,18,-50]].map(([x,y,r])=>`<ellipse cx="${x}" cy="${y}" rx="6" ry="3.2" fill="#fff8e6" stroke="#d8b878" stroke-width="1" transform="rotate(${r} ${x} ${y})"/>`).join('')}`},
+  kabab:{name:'kabab',h:42,s:6,drop:4,svg:c=>`<path d="M12 21 Q12 4 42 4 L258 4 Q288 4 288 21 Q288 38 258 38 L42 38 Q12 38 12 21Z" fill="${c||'#86492a'}" stroke="${INK}" stroke-width="3"/><g stroke="${mix(c||'#86492a','#000000',.35)}" stroke-width="4" stroke-linecap="round" opacity=".7"><path d="M70 10 L90 32 M130 10 L150 32 M190 10 L210 32"/></g><g>${[[50,16,'#d8402a'],[100,28,'#4f9a3a'],[160,14,'#d8402a'],[220,26,'#4f9a3a'],[250,14,'#d8402a'],[120,20,'#f0c060'],[200,30,'#d8402a']].map(([x,y,f])=>`<circle cx="${x}" cy="${y}" r="2.6" fill="${f}"/>`).join('')}</g><path d="M30 12 Q80 6 140 8" stroke="#fff" stroke-width="4" opacity=".3" fill="none" stroke-linecap="round"/>`},
+  strips:{name:'crispy strips',h:36,s:6,drop:4,svg:c=>[[20,6,-3],[100,2,2],[176,6,-2]].map(([x,y,r])=>`<g transform="rotate(${r} ${x+52} ${y+14})"><rect x="${x}" y="${y}" width="104" height="28" rx="14" fill="${c||'#dea045'}" stroke="${INK}" stroke-width="2.5"/>${[0,1,2,3,4,5,6].map(i=>`<circle cx="${x+12+i*13}" cy="${y+8+(i%3)*6}" r="2.2" fill="${mix(c||'#dea045','#ffffff',.45)}"/>`).join('')}</g>`).join('')},
+  lettuce:{name:'lettuce',h:28,s:6,drop:7,svg:()=>`<path d="M2 14 ${Array.from({length:12},(_,i)=>`q12.3 -14 24.6 0`).join(' ')} L296 18 ${Array.from({length:12},(_,i)=>`q-12.3 14 -24.6 0`).join(' ')}Z" fill="#7ccf4f" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/><path d="M20 16 Q150 8 280 16" stroke="#c8f0a0" stroke-width="3" fill="none"/><g stroke="#bff09a" stroke-width="2">${[40,90,140,190,240].map(x=>`<path d="M${x} 16 l-8 -7 M${x} 16 l8 -7"/>`).join('')}</g>`},
+  lettuceSmall:{name:'chopped lettuce',h:26,s:6,drop:5,svg:()=>`<g stroke="${INK}" stroke-width="1.6">${Array.from({length:26},(_,i)=>{const x=14+i*10.6,y=6+(i*37%11);return `<path d="M${x} ${y} l9 2 l-2 8 l-9 -1z" fill="${i%3?'#7ccf4f':'#a8e070'}" transform="rotate(${(i*47)%60-30} ${x+4} ${y+5})"/>`}).join('')}</g>`},
+  tomato:{name:'tomato',h:22,s:4,drop:3,svg:()=>[[24,2],[150,2]].map(([x,y])=>`<rect x="${x}" y="${y}" width="126" height="18" rx="9" fill="url(#gTomato)" stroke="${INK}" stroke-width="2.5"/><rect x="${x+8}" y="${y+4}" width="110" height="7" rx="3.5" fill="#ff9a7a"/>${[20,46,72,98].map(d=>`<ellipse cx="${x+d}" cy="${y+8}" rx="3" ry="2" fill="#ffe08a"/>`).join('')}`).join('')},
+  cheese:{name:'cheese',h:24,s:4,drop:8,svg:()=>`<path d="M20 4 L280 4 L294 22 L262 14 L238 20 L62 20 L36 14 L6 22Z" fill="url(#gCheese)" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/><path d="M30 8 L270 8" stroke="#fff8c8" stroke-width="3"/>`},
+  ketchup:{name:'ketchup',h:12,s:2,drop:4,svg:()=>`<path d="M28 6 ${Array.from({length:10},()=>`l12 4 l12 -4`).join(' ')}" fill="none" stroke="#c8241a" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M30 5 ${Array.from({length:10},()=>`l12 4 l12 -4`).join(' ')}" fill="none" stroke="#ff7060" stroke-width="2" opacity=".7"/>`},
+  mayo:{name:'mayo',h:12,s:2,drop:4,svg:()=>`<path d="M28 6 ${Array.from({length:10},()=>`l12 4 l12 -4`).join(' ')}" fill="none" stroke="#f3e2b0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M30 5 ${Array.from({length:10},()=>`l12 4 l12 -4`).join(' ')}" fill="none" stroke="#fff" stroke-width="2" opacity=".8"/>`}
+};
+const layerCol=k=>{const f=run&&run.fry||{};return k==='bunB'||k==='bunT'?f.buns&&f.buns.col:k==='kabab'?f.kabab&&f.kabab.col:k==='strips'?f.strips&&f.strips.col:null;};
+function stackLayout(layers){let bottom=380;const out=[];let prev=null;layers.forEach(k=>{const L=BL[k];if(prev)bottom=prev.top+BL[prev.k].s+L.drop;const top=bottom-L.h;out.push({k,top});prev={k,top};});return out;}
+function burgerPic(layers,cols){
+  const pos=stackLayout(layers),minT=Math.min(...pos.map(p=>p.top)),H=380-minT;
+  return `<svg x="0" y="${126-Math.min(126,H*120/300)}" width="120" height="${Math.min(126,H*120/300)}" viewBox="0 ${minT} 300 ${H}" overflow="visible">${pos.map(p=>`<g transform="translate(0 ${p.top})">${BL[p.k].svg(cols&&cols[p.k])}</g>`).join('')}</svg>`;
+}
+const burgerInner=burgerPic(['bunB','lettuce','kabab','cheese','tomato','bunT']);
+
+/* fridge items for the cupboard */
+const bunsSVG=`<svg viewBox="0 0 110 80" width="100%" height="100%"><path d="M8 52 Q8 70 30 70 L80 70 Q102 70 102 52Z" fill="${BUN_CRUST}" stroke="${INK}" stroke-width="2.5"/><path d="M8 48 Q8 8 55 6 Q102 8 102 48Z" fill="${BUN_CRUST}" stroke="${INK}" stroke-width="2.5"/><ellipse cx="38" cy="20" rx="16" ry="5" fill="#fff" opacity=".5" transform="rotate(-15 38 20)"/>${[[40,30],[56,20],[70,32],[60,40],[48,40]].map(([x,y])=>`<ellipse cx="${x}" cy="${y}" rx="3.5" ry="2" fill="#fff8e6"/>`).join('')}</svg>`;
+const kababSVG=`<svg viewBox="0 0 110 80" width="100%" height="100%"><rect x="6" y="30" width="98" height="44" rx="8" fill="#fff" stroke="${INK}" stroke-width="2.5"/><ellipse cx="55" cy="44" rx="40" ry="16" fill="#cf6b5e" stroke="${INK}" stroke-width="2.5"/>${[[38,40,'#4f9a3a'],[60,48,'#d8402a'],[72,40,'#4f9a3a'],[48,50,'#f0c060']].map(([x,y,f])=>`<circle cx="${x}" cy="${y}" r="2.6" fill="${f}"/>`).join('')}<path d="M10 30 Q55 18 100 30" fill="#e6f6ff" opacity=".7" stroke="#9fc4dc" stroke-width="2"/></svg>`;
+const stripsSVG=`<svg viewBox="0 0 110 80" width="100%" height="100%"><rect x="6" y="34" width="98" height="40" rx="8" fill="#fff" stroke="${INK}" stroke-width="2.5"/>${[[16,38,-8],[40,36,4],[64,40,-4]].map(([x,y,r])=>`<rect x="${x}" y="${y}" width="30" height="12" rx="6" fill="#f3dcae" stroke="${INK}" stroke-width="2" transform="rotate(${r} ${x+15} ${y+6})"/>`).join('')}<path d="M10 34 Q55 22 100 34" fill="#e6f6ff" opacity=".7" stroke="#9fc4dc" stroke-width="2"/></svg>`;
+const lettuceSVG=`<svg viewBox="0 0 100 90" width="100%" height="100%"><path d="M50 8 C82 8 96 34 92 56 C88 80 66 88 50 88 C30 88 10 78 8 56 C6 32 20 8 50 8Z" fill="#7ccf4f" stroke="${INK}" stroke-width="2.5"/><path d="M50 14 C30 30 30 70 48 86 M50 14 C70 30 72 66 60 84 M22 40 C34 46 40 60 40 80 M80 40 C68 48 64 62 66 80" fill="none" stroke="#c8f0a0" stroke-width="3"/></svg>`;
+const tomatoSVG=`<svg viewBox="0 0 100 90" width="100%" height="100%"><circle cx="50" cy="50" r="36" fill="url(#gTomato)" stroke="${INK}" stroke-width="2.5"/><path d="M50 16 L44 6 L50 12 L56 4 L54 14 L66 12 L56 20 L62 26 L50 20 L40 26 L44 18 L34 14Z" fill="url(#gLeaf)" stroke="${INK}" stroke-width="1.5" stroke-linejoin="round"/><ellipse cx="36" cy="38" rx="9" ry="6" fill="#fff" opacity=".5" transform="rotate(-30 36 38)"/></svg>`;
+const mayoSVG=`<svg viewBox="0 0 60 120" width="100%" height="100%"><rect x="20" y="4" width="20" height="18" rx="4" fill="#3fa8ff" stroke="${INK}" stroke-width="2.5"/><path d="M20 22 h20 q14 10 14 28 v56 q0 8 -8 8 h-32 q-8 0 -8 -8 v-56 q0 -18 14 -28z" fill="#fff6dc" stroke="${INK}" stroke-width="2.5"/><rect x="10" y="60" width="40" height="34" rx="6" fill="#3fa8ff"/><text x="30" y="82" text-anchor="middle" font-family="Fredoka,sans-serif" font-weight="700" font-size="11" fill="#fff">MAYO</text><rect x="12" y="34" width="5" height="70" rx="2.5" fill="#fff" opacity=".7"/></svg>`;
+Object.assign(ING,{
+  buns:{name:'burger buns',svg:bunsSVG,w:86,h:64,col:BUN_CRUST,kind:'solid'},
+  kabab:{name:'kabab',svg:kababSVG,w:86,h:64,col:'#cf6b5e',kind:'solid'},
+  strips:{name:'chicken strips',svg:stripsSVG,w:86,h:64,col:'#f3dcae',kind:'solid'},
+  lettuce:{name:'lettuce',svg:lettuceSVG,w:72,h:66,col:'#7ccf4f',kind:'solid'},
+  tomato:{name:'tomato',svg:tomatoSVG,w:68,h:62,col:'#e2321e',kind:'solid'}
+});
+Object.assign(FACTS,{
+  buns:'Toasting the cut side of a bun makes it crunchy, so the sauce does not make it soggy.',
+  kabab:'A kabab is minced meat mixed with spices and herbs. It must be cooked right through.',
+  strips:'Chicken strips are coated in crumbs. The crumbs turn crunchy and golden in hot oil.',
+  lettuce:'Lettuce is mostly water, so it adds a cool, fresh crunch to a hot burger.',
+  tomato:'A tomato is really a fruit, because it has seeds inside!',
+  cheese:'Cheese is made from milk. A hot burger makes it go soft and melty.'
+});
+Object.assign(FRUIT,{
+  lettuce:{cuts:[110,165,220],flesh:'#e2f8c4',say:'Cut the lettuce into strips on the dotted lines.',shape:'M40 80 C40 20 120 14 170 18 C240 22 290 40 290 82 C290 128 230 146 160 146 C90 146 40 130 40 80Z',
+    art:()=>`<path d="M40 80 C40 20 120 14 170 18 C240 22 290 40 290 82 C290 128 230 146 160 146 C90 146 40 130 40 80Z" fill="#7ccf4f" stroke="${INK}" stroke-width="3"/><path d="M60 60 C100 30 200 30 270 64 M50 96 C110 70 210 76 280 104 M70 126 C120 110 200 112 260 130" fill="none" stroke="#a8e874" stroke-width="7" stroke-linecap="round"/><path d="M80 40 L90 140 M160 20 L160 146 M240 36 L228 140" stroke="#d6f8b4" stroke-width="3"/>`},
+  lettuceSmall:{ing:'lettuce',cuts:[80,115,150,185,220,255],flesh:'#e2f8c4',say:'Cut the lettuce into small pieces. Lots of little cuts!',shape:'M40 80 C40 20 120 14 170 18 C240 22 290 40 290 82 C290 128 230 146 160 146 C90 146 40 130 40 80Z',
+    art:()=>`<path d="M40 80 C40 20 120 14 170 18 C240 22 290 40 290 82 C290 128 230 146 160 146 C90 146 40 130 40 80Z" fill="#7ccf4f" stroke="${INK}" stroke-width="3"/><path d="M60 60 C100 30 200 30 270 64 M50 96 C110 70 210 76 280 104 M70 126 C120 110 200 112 260 130" fill="none" stroke="#a8e874" stroke-width="7" stroke-linecap="round"/><path d="M80 40 L90 140 M160 20 L160 146 M240 36 L228 140" stroke="#d6f8b4" stroke-width="3"/>`},
+  tomato:{cuts:[115,145,175,205],flesh:'#ff8a70',say:'Slice the tomato on the lines to make thin slices.',shape:'M70 80 C70 30 110 18 160 18 C210 18 250 30 250 80 C250 130 210 144 160 144 C110 144 70 130 70 80Z',
+    art:()=>`<path d="M70 80 C70 30 110 18 160 18 C210 18 250 30 250 80 C250 130 210 144 160 144 C110 144 70 130 70 80Z" fill="url(#gTomato)" stroke="${INK}" stroke-width="3"/><path d="M160 22 L150 6 L160 14 L170 2 L168 16 L184 14 L170 24Z" fill="url(#gLeaf)" stroke="${INK}" stroke-width="2"/><ellipse cx="120" cy="50" rx="24" ry="12" fill="#fff" opacity=".45" transform="rotate(-20 120 50)"/>`},
+  cheeseblock:{ing:'cheese',cuts:[105,160,215],flesh:'#ffe27a',say:'Prepare the cheese: cut the block into slices on the lines.',shape:'M50 44 L270 44 L270 136 L50 136Z',
+    art:()=>`<path d="M50 44 L270 44 L270 136 L50 136Z" fill="url(#gCheese)" stroke="${INK}" stroke-width="3"/><path d="M50 44 L80 22 L298 22 L270 44Z" fill="#fff2a0" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><path d="M270 44 L298 22 L298 114 L270 136Z" fill="#f2c02a" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>${[[90,80,10],[150,110,7],[200,70,12],[240,112,6],[120,60,5]].map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#f2c02a"/>`).join('')}`}
+});
+
+function burgerGo(){
+  const i=run.steps.indexOf(run.bstep||'gather')+1,s=run.steps[i];run.bstep=s;
+  const map={buns:()=>sceneFry('buns'),kabab:()=>sceneFry('kabab'),strips:()=>sceneFry('strips'),
+    lettuce:()=>sceneChop({items:[run.R.lettuceKey],step:'lettuce',done:'Lettuce ready!',next:burgerGo}),
+    tomato:()=>sceneChop({items:['tomato'],step:'tomato',done:'Tomato slices ready!',next:burgerGo}),
+    cheese:()=>sceneChop({items:['cheeseblock'],step:'cheese',done:'Cheese slices ready!',next:burgerGo}),
+    arrange:sceneArrange};
+  goto(map[s]);
+}
+
+/* --------------------------------------------------------------- frying */
+function sceneFry(kind){
+  setStep(kind);kitchen();
+  const PC={x:790,y:450,r:178},stops=FRY_STOPS[kind],flip=kind!=='buns',oily=kind==='strips';
+  el('div','abs',`<svg viewBox="0 0 640 440" width="640" height="440"><ellipse cx="250" cy="250" rx="230" ry="200" fill="#ff7a2a" opacity=".25"/><rect x="420" y="225" width="210" height="40" rx="20" fill="#3b3346" stroke="${INK}" stroke-width="3"/><rect x="560" y="229" width="64" height="32" rx="16" fill="url(#gLidPink)"/><circle cx="250" cy="245" r="200" fill="#4a4058" stroke="${INK}" stroke-width="3"/><circle cx="250" cy="245" r="182" fill="${oily?'#e8b84a':'#2f2a3a'}"/><circle cx="250" cy="245" r="182" fill="url(#gShade)" opacity=".5"/>${oily?'<circle cx="250" cy="245" r="182" fill="#ffd970" opacity=".35"/>':''}<ellipse cx="170" cy="140" rx="70" ry="22" fill="#fff" opacity=".12" transform="rotate(-30 170 140)"/></svg>`).style.cssText+=`left:${PC.x-250}px;top:${PC.y-245}px;z-index:2`;
+  const plate=el('div','abs plate');place(plate,60,400,380,150);
+  const bubbles=el('div','abs');place(bubbles,PC.x-180,PC.y-180,360,360);bubbles.style.zIndex=3;bubbles.style.pointerEvents='none';
+  const defs={buns:{n:2,w:150,h:120,slots:[[-80,-10],[85,-10]],say:'Put the buns in the hot pan, cut side down. Take them off when the arrow is in the gold zone!'},
+    kabab:{n:1,w:190,h:190,slots:[[0,0]],say:'Fry the kabab! Drag it into the pan. Tap it to flip it when the arrow reaches gold, then cook the other side.'},
+    strips:{n:3,w:200,h:62,slots:[[0,-105],[0,0],[0,105]],say:'Fry the chicken strips in the hot oil. Tap each one to flip it when it is golden, then drag it onto the plate.'}}[kind];
+  const face=(it,v)=>{
+    const c=lerpCol(stops,v);
+    if(kind==='buns')return it.i===0?`<svg viewBox="0 0 150 120" width="100%" height="100%"><circle cx="75" cy="60" r="56" fill="${it.done?c:BUN_CRUST}" stroke="${INK}" stroke-width="3"/>${it.done?'':`<ellipse cx="55" cy="38" rx="18" ry="8" fill="#fff" opacity=".45" transform="rotate(-25 55 38)"/>${[[60,60],[80,44],[96,66],[70,82],[50,76],[88,86]].map(([x,y])=>`<ellipse cx="${x}" cy="${y}" rx="5" ry="3" fill="#fff8e6"/>`).join('')}`}</svg>`
+      :`<svg viewBox="0 0 150 120" width="100%" height="100%"><circle cx="75" cy="60" r="56" fill="${it.done?c:BUN_CRUST}" stroke="${INK}" stroke-width="3"/>${it.done?'':'<ellipse cx="55" cy="38" rx="18" ry="8" fill="#fff" opacity=".35" transform="rotate(-25 55 38)"/>'}</svg>`;
+    if(kind==='kabab')return `<svg viewBox="0 0 190 190" width="100%" height="100%"><circle cx="95" cy="95" r="82" fill="${c}" stroke="${INK}" stroke-width="3"/>${[[60,70,'#4f9a3a'],[110,60,'#d8402a'],[130,110,'#4f9a3a'],[80,125,'#d8402a'],[95,95,'#f0c060'],[140,80,'#d8402a'],[55,105,'#4f9a3a']].map(([x,y,f])=>`<circle cx="${x}" cy="${y}" r="4" fill="${f}"/>`).join('')}${v>.45?`<g stroke="${mix(c,'#000000',.4)}" stroke-width="7" stroke-linecap="round" opacity=".55"><path d="M50 80 L140 60 M45 115 L145 95 M60 145 L135 128"/></g>`:''}<ellipse cx="70" cy="55" rx="26" ry="10" fill="#fff" opacity=".2" transform="rotate(-25 70 55)"/></svg>`;
+    return `<svg viewBox="0 0 210 70" width="100%" height="100%"><rect x="6" y="8" width="198" height="54" rx="27" fill="${c}" stroke="${INK}" stroke-width="3"/>${Array.from({length:16},(_,i)=>`<circle cx="${22+i*11.5}" cy="${20+(i*7%26)}" r="3" fill="${mix(c,'#ffffff',.4)}"/>`).join('')}</svg>`;
+  };
+  const items=[];
+  for(let i=0;i<defs.n;i++){
+    const it={i,sides:[0,0],down:0,on:false,done:false};
+    const hx=110+(defs.n===3?0:i*170)+(defs.n===1?60:0),hy=defs.n===3?370+i*0:420;
+    it.home={x:defs.n===3?80+i*20:hx,y:defs.n===3?405+i*40:hy};if(defs.n===1)it.home={x:150,y:380};
+    it.n=el('div','abs fryitem',face(it,0));place(it.n,it.home.x,it.home.y,defs.w,defs.h);it.n.style.zIndex=10+i;
+    it.g=el('div','abs fgauge','<i></i><b></b>');it.g.hidden=true;
+    items.push(it);
+  }
+  const slotXY=it=>({x:PC.x+defs.slots[it.i][0]-defs.w/2,y:PC.y+defs.slots[it.i][1]-defs.h/2});
+  const upd=it=>{it.n.innerHTML=face(it,flip?it.sides[1-it.down]:0);const p=slotXY(it);if(it.on&&!it.done){it.g.hidden=false;place(it.g,p.x+defs.w/2-70,p.y-26,140,18);it.g.querySelector('b').style.left=Math.min(100,it.sides[it.down]*100)+'%';}else it.g.hidden=true;};
+  const q=v=>v>=.55&&v<=.78?1:v<.55?Math.max(.3,1-(.55-v)*2):Math.max(.25,1-(v-.78)*2.5);
+  let warned={},finished=false;
+  function putOn(it){it.on=true;const p=slotXY(it);place(it.n,p.x,p.y);sfx.splat();upd(it);if(!warned.first){warned.first=1;say(flip?'Sizzle! Watch the arrow. Tap to flip when it reaches gold.':'Sizzle! Watch the arrow and take them off in the gold zone.');}}
+  function takeOff(it){
+    if(flip&&(it.sides[0]<.45||it.sides[1]<.45)){sfx.nope();const p=slotXY(it);place(it.n,p.x,p.y);say(it.sides[0]<.45&&it.sides[1]<.45?'Not cooked yet! Wait for the arrow to reach gold.':'One side is still raw! Tap to flip it and cook the other side too.');return;}
+    if(!flip&&it.sides[0]<.3){sfx.nope();const p=slotXY(it);place(it.n,p.x,p.y);say('The buns need a bit longer to toast.');return;}
+    it.done=true;it.on=false;it.g.hidden=true;sfx.pop();
+    const dn=items.filter(x=>x.done).length;place(it.n,90+(dn-1)*(defs.n===3?95:150)+(defs.n===1?60:0),defs.n===3?430:410,defs.w*(defs.n===3?.55:.8),defs.h*(defs.n===3?.55:.8));
+    it.n.innerHTML=face(it,flip?Math.max(...it.sides):it.sides[0]);it.n.style.cursor='default';
+    const vs=flip?it.sides:[it.sides[0]];const qq=vs.reduce((a,v)=>a+q(v),0)/vs.length;
+    tag(qq>=.95?'Perfect!':vs.some(v=>v>.9)?'A bit burnt':vs.some(v=>v<.55)?'A bit pale':'Nice!',it.n.offsetLeft,it.n.offsetTop-40,qq>=.95?'#3fd39b':'#ffbf2e');
+    if(items.every(x=>x.done))done();
+  }
+  function done(){
+    if(finished)return;finished=true;
+    const vs=[];items.forEach(it=>{if(flip)vs.push(...it.sides);else vs.push(it.sides[0]);});
+    const avg=vs.reduce((a,b)=>a+b,0)/vs.length,qual=vs.reduce((a,v)=>a+q(v),0)/vs.length;
+    run.fry=run.fry||{};run.fry[kind]={col:lerpCol(stops,Math.min(.95,avg)),q:qual};run.score.fry=run.score.fry||{};run.score.fry[kind]=qual;
+    sfx.cheer();say(kind==='buns'?'Toasty buns! Did you know? '+FACTS.buns:kind==='kabab'?'Cooked right through! Did you know? Meat must be cooked all the way, so there is no pink left in the middle.':'Golden and crunchy! Did you know? '+FACTS.strips);
+    capEl.classList.add('dyk');later(()=>{bigButton('Next',990,600,'',burgerGo);setHint(()=>({x:1060,y:640}));},900);
+  }
+  items.forEach(it=>{
+    it.n.addEventListener('pointerdown',e=>{
+      if(it.done||finished)return;e.preventDefault();try{it.n.setPointerCapture(e.pointerId);}catch(_){}
+      const p0=toStage(e),l0=parseFloat(it.n.style.left),t0=parseFloat(it.n.style.top);let moved=false;it.n.style.zIndex=30;
+      const mv=ev=>{const p=toStage(ev);if(Math.hypot(p.x-p0.x,p.y-p0.y)>10)moved=true;if(moved)place(it.n,l0+p.x-p0.x,t0+p.y-p0.y);};
+      const up=ev=>{it.n.removeEventListener('pointermove',mv);it.n.removeEventListener('pointerup',up);it.n.removeEventListener('pointercancel',up);it.n.style.zIndex=10+it.i;
+        const p=toStage(ev);
+        if(!moved){if(!it.on){putOn(it);return;}if(flip){it.down=1-it.down;sfx.squish();it.n.animate([{transform:'scaleY(1)'},{transform:'scaleY(.05)'},{transform:'scaleY(1)'}],{duration:320});later(()=>upd(it),160);if(!warned.flip){warned.flip=1;say('Flipped! Now the other side is cooking.');}}else takeOff(it);return;}
+        const onPan=Math.hypot(p.x-PC.x,p.y-PC.y)<PC.r+20;
+        if(!it.on){if(onPan)putOn(it);else place(it.n,l0,t0);return;}
+        if(onPan){const s=slotXY(it);place(it.n,s.x,s.y);return;}
+        takeOff(it);
+      };
+      it.n.addEventListener('pointermove',mv);it.n.addEventListener('pointerup',up);it.n.addEventListener('pointercancel',up);
+    });
+  });
+  let k=0;
+  every(()=>{
+    let any=false;
+    items.forEach(it=>{if(!it.on||it.done)return;any=true;it.sides[it.down]=Math.min(1.1,it.sides[it.down]+.012);upd(it);
+      const v=it.sides[it.down];
+      if(v>.6&&!it['w'+it.down]){it['w'+it.down]=1;tag(flip?'Flip me!':'Take me off!',it.n.offsetLeft+defs.w/2-60,it.n.offsetTop-50,'#3fd39b');sfx.ding();}
+      if(v>.92&&!it['b'+it.down]){it['b'+it.down]=1;say('Quick, it is starting to burn!');}
+    });
+    if(any){if(++k%3===0)noise(.25,.06,oily?1800:2600);
+      if(k%2===0){const b=el('div','abs '+(oily?'oilbub':'steam'),null,bubbles);place(b,40+Math.random()*280,oily?60+Math.random()*240:120+Math.random()*120);later(()=>b.remove(),1200);}}
+  },100);
+  say(defs.say);
+  setHint(()=>{const it=items.find(x=>!x.on&&!x.done);if(it)return{x:parseFloat(it.n.style.left)+defs.w/2,y:parseFloat(it.n.style.top)+defs.h/2,toX:PC.x,toY:PC.y};
+    const r=items.find(x=>x.on&&!x.done&&x.sides[x.down]>=.55);if(r){const p=slotXY(r);return flip&&r.sides[1-r.down]<.45?{x:p.x+defs.w/2,y:p.y+defs.h/2}:{x:p.x+defs.w/2,y:p.y+defs.h/2,toX:250,toY:470};}return null;});
+}
+
+/* --------------------------------------------------------------- arrange the burger */
+function sceneArrange(){
+  setStep('arrange');kitchen();
+  const R=run.R,o=run.order;
+  el('div','abs chopboard').style.cssText+='left:430px;top:500px;width:420px;height:120px';
+  const st=document.createElement('div');st.className='abs cake burgerstack';scene.appendChild(st);place(st,460,140,360,400);run.cake=st;
+  run.stack=['bunB'];
+  const tk=el('div','abs panel ticket',`<div class="pic">${productSVG(run.key,o.layers)}</div><div><h3>${CN()}’s order</h3><p>From the bottom: ${o.layers.slice(1,-1).map(k=>BL[k].name).join(', ')}, then the top bun.</p></div>`);place(tk,880,92,380);
+  const opts=[...new Set(R.fill)].concat(['bunT']);
+  const left=el('div','abs panel dpanel',`<h3>Fillings</h3><p class="sub">Drag them onto the bun</p><div class="row fl"></div>`);place(left,18,190,330);
+  const right=el('div','abs panel dpanel',`<h3>Sauce</h3><div class="row sc"></div>`);place(right,1000,330,250);
+  function draw(){
+    st.innerHTML='';const pos=stackLayout(run.stack);
+    pos.forEach((p,i)=>{const d=document.createElement('div');d.className='blayer';d.innerHTML=`<svg viewBox="0 0 300 ${BL[p.k].h}" width="300" height="${BL[p.k].h}" overflow="visible">${BL[p.k].svg(layerCol(p.k))}</svg>`;d.style.cssText=`position:absolute;left:30px;top:${p.top}px;width:300px;height:${BL[p.k].h}px;z-index:${i+1}`;d.dataset.k=p.k;st.appendChild(d);
+      if(i===pos.length-1&&i>0){d.style.cursor='pointer';d.addEventListener('click',()=>{if(finished)return;run.stack.pop();sfx.boing();draw();say('Taken off. Put the right one on!');if(doneBtn){doneBtn.remove();doneBtn=null;}});}
+      if(i===pos.length-1&&i>0&&lastAdded)d.animate([{transform:'translateY(-90px)',opacity:.3},{transform:'none',opacity:1}],{duration:260,easing:'ease-in'});});
+    lastAdded=false;
+  }
+  let lastAdded=false,doneBtn=null,finished=false;
+  function add(k){
+    if(finished)return;
+    if(run.stack[run.stack.length-1]==='bunT'){sfx.nope();say('The top bun is already on! Tap it to take it off first.');return;}
+    run.stack.push(k);lastAdded=true;draw();sfx.plop();
+    const i=run.stack.length-1,want=o.layers[i];
+    if(k==='bunT'){say(run.stack.join()===o.layers.join()?'Perfect! Exactly how '+CN()+' ordered it!':'Burger done! Check it matches '+CN()+'’s order. Tap the top layer to take it off.');if(!doneBtn)doneBtn=bigButton('Done!',1010,612,'',()=>{finished=true;finish();});}
+    else if(k!==want)say('Hmm, '+CN()+' wanted '+(want==='bunT'?'the top bun':BL[want].name)+' there. Tap it to take it off.');
+    else say(['Yes!','Good!','Lovely!','Right!'][i%4]+' What comes next?');
+  }
+  function addable(btn,k){
+    btn.style.touchAction='none';
+    btn.addEventListener('pointerdown',e=>{
+      e.preventDefault();try{btn.setPointerCapture(e.pointerId);}catch(_){}
+      const p0=toStage(e);let moved=false;const g=el('div','abs bghost',`<svg viewBox="0 0 300 ${BL[k].h}" width="100%" height="100%" overflow="visible">${BL[k].svg(layerCol(k))}</svg>`);g.style.zIndex=60;
+      const at=p=>place(g,p.x-100,p.y-BL[k].h/3,200,BL[k].h*2/3);at(p0);sfx.pop();
+      const mv=ev=>{const p=toStage(ev);if(Math.hypot(p.x-p0.x,p.y-p0.y)>8)moved=true;at(p);};
+      const up=ev=>{btn.removeEventListener('pointermove',mv);btn.removeEventListener('pointerup',up);btn.removeEventListener('pointercancel',up);g.remove();
+        const p=toStage(ev);if(!moved||(p.x>430&&p.x<860&&p.y>90&&p.y<620))add(k);else{sfx.nope();say('Drop it on the burger!');}};
+      btn.addEventListener('pointermove',mv);btn.addEventListener('pointerup',up);btn.addEventListener('pointercancel',up);
+    });
+  }
+  opts.forEach(k=>{const b=el('button','tool btile',`<svg viewBox="-6 ${BL[k].h/2-40} 312 80" width="100%" height="46">${BL[k].svg(layerCol(k))}</svg><span>${cap1(BL[k].name)}</span>`,left.querySelector('.fl'));b.setAttribute('aria-label',BL[k].name);b.title=BL[k].name;addable(b,k);});
+  [['ketchup',ketchupSVG],['mayo',mayoSVG]].forEach(([k,svg])=>{const b=el('button','tool',svg,right.querySelector('.sc'));b.setAttribute('aria-label',k);addable(b,k);});
+  function finish(){
+    const a=run.stack,b=o.layers;const sorted=x=>x.slice().sort().join();
+    run.score.layersSet=sorted(a)===sorted(b)?1:Math.max(0,1-Math.abs(a.length-b.length)*.25-a.filter((k,i)=>!b.includes(k)).length*.25);
+    run.score.layersExact=a.join()===b.join();
+    st.querySelectorAll('.blayer').forEach(d=>d.style.pointerEvents='none');
+    goto(sceneServe);
+  }
+  draw();
+  say('Arrange the burger! Build it from the bottom, just how '+CN()+' ordered.');
+  setHint(()=>{const want=o.layers[run.stack.length];if(!want)return null;const b=[...scene.querySelectorAll('.panel .tool')].find(x=>x.getAttribute('aria-label')===(BL[want]&&BL[want].name)||x.getAttribute('aria-label')===want);if(!b)return null;const r=b.getBoundingClientRect(),s=stage.getBoundingClientRect(),kk=s.width/W;return{x:(r.left-s.left+r.width/2)/kk,y:(r.top-s.top+r.height/2)/kk,toX:640,toY:300};});
+}
+
+/* recipes + shop */
+const bg=o=>Object.assign({shop:'burger',eggs:0,bake:[[0,'#fff'],[1,'#fff']],temp:0},o);
+Object.assign(RECIPES,{
+  zinger:bg({name:'Zinger burger',price:0,ings:['buns','kabab','lettuce','tomato'],fill:['lettuce','kabab','tomato'],lettuceKey:'lettuce',noun:'zinger burger',
+    steps:['order','gather','buns','kabab','lettuce','tomato','arrange','serve'],demo:['bunB','lettuce','kabab','ketchup','tomato','bunT']}),
+  cheeseburger:bg({name:'Cheese burger',price:40,ings:['buns','cheese','strips','lettuce'],fill:['lettuceSmall','strips','cheese'],lettuceKey:'lettuceSmall',noun:'cheese burger',
+    steps:['order','gather','buns','cheese','strips','lettuce','arrange','serve'],demo:['bunB','lettuceSmall','strips','cheese','mayo','bunT']})
+});
+SHOPS.burger={name:'Burger Hut',keys:['zinger','cheeseburger'],pool:['buns','kabab','strips','lettuce','tomato','cheese','ketchup','onion','fish','flour','eggs','milk','banana','strawberry','sugar','cocoa','honey','carrot','lemon','yogurt','mango','salt'],cust:'bear',board:'Which burger shall we make?',price:80};
+CUST.bear={name:'Bruno',full:'Bruno the bear'};
 
 /* =================================================================== PLAYERS */
 const ANIMALS=['bunny','puppy','kitten'];
@@ -2416,6 +2657,7 @@ function sceneNewPlayer(){
 
 startDb();
 goto(scenePlayers);
+window.__cs={get run(){return run},BL,FRUIT};
 })();
 </script>
 
